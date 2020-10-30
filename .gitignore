@@ -4,3 +4,5 @@ node_modules
 .idea
 dist
 .DS_Store
+
+better_examinations/exported_pdfs

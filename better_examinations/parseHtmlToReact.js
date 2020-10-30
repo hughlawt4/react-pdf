@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactHtmlParser from 'react-html-parser';
 
-export const HtmlToReact = (html, components) => {
+export const HtmlToReact = (html, components, debug) => {
   if (!html) {
     return null;
   }
@@ -9,6 +9,11 @@ export const HtmlToReact = (html, components) => {
   const transform = (node, idx) => {
     if (node.type !== 'tag') {
       return;
+    }
+
+    if (node.name === 'ul') {
+      console.log('got one!');
+      return null;
     }
 
     // const componentName = node.name.charAt(0).toUpperCase() + node.name.slice(1);
