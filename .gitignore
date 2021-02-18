@@ -1,6 +1,12 @@
 node_modules
 *.log
+dist
+coverage
 .jshintrc
 .idea
 dist
 .DS_Store
+packages/test-web
+packages/test-node
+packages/examples/src/better_examinations/exported_pdfs
+packages/examples/src/better_examinations/submissions
