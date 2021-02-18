@@ -12,6 +12,7 @@
   "scripts": {
     "build": "lerna run build",
     "watch": "lerna run watch --parallel",
+    "be:generatepdf": "babel-node ./packages/examples/src/better_examinations/index.js",
     "bootstrap": "lerna bootstrap",
     "prepublish": "lerna run build",
     "lint": "eslint packages",
@@ -29,7 +30,7 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.1.0",
     "babel-plugin-add-module-exports": "^1.0.0",
-    "chalk": "^2.4.2",
+    "chalk": "^4.1.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "^4.0.0",
@@ -71,9 +72,8 @@
     "url": "https://opencollective.com/react-pdf",
     "logo": "https://opencollective.com/opencollective/logo.txt"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "git add . && lint-staged"
-    }
+  "dependencies": {
+    "moment": "^2.29.1",
+    "react-html-parser": "^2.0.2"
   }
 }
