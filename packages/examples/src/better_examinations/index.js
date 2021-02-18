@@ -14,8 +14,9 @@ import chalk from 'chalk';
 import fs from 'fs';
 import moment from 'moment';
 import React from 'react';
+import { sortedUniq } from 'lodash';
 import { HtmlToReact } from './parseHtmlToReact';
-import data from './submissions/sessions.json';
+import data from './submissions/Law-of-Torts.json';
 
 /**
  * If you have issue with certain words breaking hyphenation
@@ -167,6 +168,7 @@ const getQuestionText = id => {
 
 const problematicSessions = [];
 const sessionsWithUnwrapped = [];
+const studentsWithNoIndex = [];
 const noOfSessions = sessions.length;
 
 const processMarkup = (markup, sessionId) => {
@@ -259,7 +261,14 @@ const padFileNumber = (num, size) => {
   return numAsString;
 };
 
-const processSession = async (session, force) => {
+const processSession = async (session, force, currentIndex, total) => {
+  if (!session.index) {
+    console.log(
+      chalk.red(`No index detected for student ${session.user_id}... Skipping`),
+    );
+    studentsWithNoIndex.push(session.user_id);
+    return;
+  }
   const doc = session => (
     <Document>
       <Page size="A4" style={styles.titlePage} wrap>
@@ -295,7 +304,11 @@ const processSession = async (session, force) => {
       ))}
     </Document>
   );
-  console.log(chalk.blue(`Generating PDF for User ID ${session.index}`));
+  console.log(
+    chalk.blue(
+      `Generating PDF for User ID ${session.index} (${currentIndex}/${total})`,
+    ),
+  );
   const alreadyExists = fs.existsSync(
     `${__dirname}/exported_pdfs/${padFileNumber(
       session.index,
@@ -356,7 +369,7 @@ const processSession = async (session, force) => {
 
   for (let i = start || 0; i < end; i++) {
     const session = sessions[i];
-    await processSession(session, force);
+    await processSession(session, force, i, end);
   }
 
   console.log(
@@ -373,6 +386,10 @@ const processSession = async (session, force) => {
 
   if (sessionsWithUnwrapped.length) {
     console.log(chalk.red('Identified unwrapped text nodes in:'));
-    console.log(sessionsWithUnwrapped);
+    console.log(sortedUniq(sessionsWithUnwrapped));
+  }
+  if (studentsWithNoIndex.length) {
+    console.log(chalk.red('Students with no index specified:'));
+    console.log(sortedUniq(studentsWithNoIndex));
   }
 })();
